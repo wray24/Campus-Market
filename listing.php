@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 // Fetch product
 $stmt = $pdo->prepare("
-    SELECT p.*, c.category_name, u.full_name, u.userID AS seller_id
+    SELECT p.*, c.category_name, u.full_name, u.email, u.userID AS seller_id
     FROM products p
     JOIN categories c ON p.category_id = c.category_id
     JOIN ecomm_users u ON p.product_ownerID = u.userID
@@ -172,6 +172,7 @@ body { background: #F3F3F3; margin: 0; font-family: 'Poppins', sans-serif; }
         <p class="info">₱<?= number_format($product['product_price'],2) ?></p>
         <p class="info">Category: <?= $product['category_name'] ?></p>
         <p class="info">Seller: <?= $product['full_name'] ?></p>
+        <p class="info">Seller contact info: <?= $product['email'] ?></p>
         <div class="rating-box">
             ⭐ Average Rating: <?= $average>0 ? renderStars($average)." ($average)" : "No ratings yet" ?>
         </div>
@@ -243,15 +244,3 @@ body { background: #F3F3F3; margin: 0; font-family: 'Poppins', sans-serif; }
 </div>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
