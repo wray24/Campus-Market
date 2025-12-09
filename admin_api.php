@@ -10,12 +10,11 @@ if(!isset($_SESSION['userID']) || ($_SESSION['role'] ?? '') !== 'admin'){
     exit;
 }
 
-header('Content-Type: application/json');
 
 $action = $_REQUEST['action'] ?? '';
 
 function json_response($arr){
-    header('Content-Type: application/json');
+   
     echo json_encode($arr);
     exit;
 }
@@ -59,7 +58,7 @@ try {
             header('Content-Disposition: attachment; filename="users_export_'.date('Ymd_His').'.csv"');
             $out = fopen('php://output', 'w');
             fputcsv($out, ['userID','full_name','email','role','is_active']);
-            $stmt = $pdo->query("SELECT userID, full_name, email, role, is_active FROM users");
+            $stmt = $pdo->query("SELECT userID, full_name, email, role, is_active FROM ecomm_users");
             while($r = $stmt->fetch(PDO::FETCH_ASSOC)){
                 fputcsv($out, [$r['userID'],$r['full_name'],$r['email'],$r['role'],$r['is_active']]);
             }
@@ -69,10 +68,10 @@ try {
             header('Content-Type: text/csv');
             header('Content-Disposition: attachment; filename="listings_export_'.date('Ymd_His').'.csv"');
             $out = fopen('php://output', 'w');
-            fputcsv($out, ['product_id','title','seller_id','price','category_id','status','created_at']);
-            $stmt = $pdo->query("SELECT product_id, product_name, product_ownerID AS seller_id, price, category_id, status FROM products");
+            fputcsv($out, ['product_id','product_name','seller_id','product_price','category_id','status','upload_date']);
+      	    $stmt = $pdo->query("SELECT product_id, product_name, product_ownerID AS seller_id, product_price AS price, category_id, status, upload_date FROM products");
             while($r = $stmt->fetch(PDO::FETCH_ASSOC)){
-                fputcsv($out, [$r['product_id'],$r['product_name'],$r['seller_id'],$r['price'],$r['category_id'],$r['status']]);
+                fputcsv($out, [$r['product_id'],$r['product_name'],$r['seller_id'],$r['price'],$r['category_id'],$r['status'], $r['upload_date']]);
             }
             fclose($out);
             exit;
